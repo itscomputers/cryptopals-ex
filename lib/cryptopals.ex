@@ -2,38 +2,39 @@ defmodule Cryptopals do
   @moduledoc """
   Documentation for `Cryptopals`.
   """
+# @hex_chars 0..15
+# |> Enum.map(fn i -> Integer.to_string(i, 16) end)
+# |> Enum.map(&(String.downcase(&1)))
 
-  def convert_to_binary(string, base)
-  def convert_to_binary(string, 16), do: Base.decode16!(string, case: :lower)
-  def convert_to_binary(string, 64), do: Base.decode64!(string)
-
-  def convert_from_binary(binary, base)
-  def convert_from_binary(binary, 16), do: Base.encode16(binary, case: :lower)
-  def convert_from_binary(binary, 64), do: Base.encode64(binary)
+# @base64_chars "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+# |> String.split("", trim: true)
 
   def convert(string, from, to) do
-    string |> convert_to_binary(from) |> convert_from_binary(to)
+    string |> Bytes.decode(from) |> Bytes.encode(to)
   end
 
-  def string_to_bytes(string, base) do
+  @spec xor(String.t(), String.t(), integer()) :: String.t()
+  def xor(string, other, base) do
+    [string, other]
+    |> Enum.map(&(Bytes.decode(&1, base)))
+    |> Bytes.xor()
+    |> Bytes.encode(base)
+  end
+
+  @spec single_byte_xor(String.t(), integer(), integer()) :: String.t()
+  def single_byte_xor(string, base, key) do
     string
-    |> convert_to_binary(base)
-    |> :binary.bin_to_list()
+    |> Bytes.decode(base)
+    |> Bytes.single_byte_xor(<<key::8>>)
+    |> Bytes.encode(base)
   end
 
-  def bytes_to_string(bytes, base) do
-    bytes
-    |> :binary.list_to_bin()
-    |> convert_from_binary(base)
-  end
-
-  def byte_wise_xor(left, right) do
-    Enum.zip(left, right)
-    |> Enum.map(&(Bitwise.bxor(elem(&1, 0), elem(&1, 1))))
-  end
-
-  def xor(left, right, base) do
-    byte_wise_xor(string_to_bytes(left, base), string_to_bytes(right, base))
-    |> bytes_to_string(base)
+  def single_byte_decrypt(string, base) do
+    0..255
+    |> Enum.map(fn key -> {key, single_byte_xor(string, base, key)} end)
+    |> Enum.map(fn {key, string} -> {key, Bytes.decode(string, base)} end)
+    |> Enum.map(fn {key, binary} -> {key, to_string(binary)} end)
+    |> Enum.max_by(fn {_key, string} -> CharacterFrequency.text_score(string) end)
   end
 end
+
