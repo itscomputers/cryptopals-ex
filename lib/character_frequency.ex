@@ -26,7 +26,7 @@ defmodule CharacterFrequency do
     "w" => 2400,
     "x" => 150,
     "y" => 2000,
-    "z" => 74,
+    "z" => 74
   }
 
   def text_score(text) do

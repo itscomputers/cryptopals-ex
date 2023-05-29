@@ -12,7 +12,7 @@ defmodule Bytes do
   @spec xor(binary(), binary()) :: binary()
   def xor(binary, other) do
     Enum.zip(:binary.bin_to_list(binary), :binary.bin_to_list(other))
-    |> Enum.map(&(Bitwise.bxor(elem(&1, 0), elem(&1, 1))))
+    |> Enum.map(&Bitwise.bxor(elem(&1, 0), elem(&1, 1)))
     |> :binary.list_to_bin()
   end
 

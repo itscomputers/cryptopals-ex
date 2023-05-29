@@ -3,7 +3,9 @@ defmodule CryptopalsTest do
   doctest Cryptopals
 
   test ".convert/3" do
-    hex = "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+    hex =
+      "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+
     expected = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t"
     assert Cryptopals.convert(hex, 16, 64) == expected
     assert Cryptopals.convert(expected, 64, 16) == hex

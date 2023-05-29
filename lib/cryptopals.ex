@@ -2,12 +2,6 @@ defmodule Cryptopals do
   @moduledoc """
   Documentation for `Cryptopals`.
   """
-# @hex_chars 0..15
-# |> Enum.map(fn i -> Integer.to_string(i, 16) end)
-# |> Enum.map(&(String.downcase(&1)))
-
-# @base64_chars "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-# |> String.split("", trim: true)
 
   def convert(string, from, to) do
     string |> Bytes.decode(from) |> Bytes.encode(to)
@@ -16,7 +10,7 @@ defmodule Cryptopals do
   @spec xor(String.t(), String.t(), integer()) :: String.t()
   def xor(string, other, base) do
     [string, other]
-    |> Enum.map(&(Bytes.decode(&1, base)))
+    |> Enum.map(&Bytes.decode(&1, base))
     |> Bytes.xor()
     |> Bytes.encode(base)
   end
@@ -37,4 +31,3 @@ defmodule Cryptopals do
     |> Enum.max_by(fn {_key, string} -> CharacterFrequency.text_score(string) end)
   end
 end
-
