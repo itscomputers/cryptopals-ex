@@ -1,6 +1,6 @@
 # Cryptopals
 
-**TODO: Add description**
+doing the [cryptopals](https://cryptopals.com/) crypto challengs in elixir
 
 ## Installation
 
