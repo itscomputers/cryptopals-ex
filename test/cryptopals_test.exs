@@ -26,4 +26,26 @@ defmodule CryptopalsTest do
     assert 0 <= key && key < 256
     assert decoded == "Cooking MC's like a pound of bacon"
   end
+
+  test ".single_byte_decrypt on multiple" do
+    {key, decoded} =
+      File.stream!("input-1-4.txt")
+      |> Enum.map(&String.trim/1)
+      |> Enum.map(&Cryptopals.single_byte_decrypt(&1, 16))
+      |> Enum.max_by(fn {_key, string} -> CharacterFrequency.text_score(string) end)
+
+    assert 0 <= key && key < 256
+    assert decoded == "Now that the party is jumping\n"
+  end
+
+  test ".repeating_key_xor" do
+    string = "Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal"
+
+    expected =
+      "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
+
+    hex = Bytes.encode(string, 16)
+    encoded = Cryptopals.repeating_key_xor(hex, 16, "ICE")
+    assert encoded == expected
+  end
 end

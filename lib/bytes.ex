@@ -19,8 +19,8 @@ defmodule Bytes do
   @spec xor([binary()]) :: binary()
   def xor(_binary_list = [binary, other]), do: xor(binary, other)
 
-  @spec single_byte_xor(binary(), binary()) :: binary()
-  def single_byte_xor(binary, key) when byte_size(key) == 1 do
+  @spec repeating_key_xor(binary(), binary()) :: binary()
+  def repeating_key_xor(binary, key) do
     key
     |> :binary.bin_to_list()
     |> Stream.cycle()

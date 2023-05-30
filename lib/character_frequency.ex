@@ -30,9 +30,15 @@ defmodule CharacterFrequency do
   }
 
   def text_score(text) do
-    text
-    |> String.split("", trim: true)
-    |> Enum.map(fn c -> Map.get(@text_frequencies, c, 0) end)
-    |> Enum.sum()
+    case String.valid?(text) do
+      true ->
+        text
+        |> String.split("", trim: true)
+        |> Enum.map(fn c -> Map.get(@text_frequencies, c, 0) end)
+        |> Enum.sum()
+
+      _ ->
+        0
+    end
   end
 end
