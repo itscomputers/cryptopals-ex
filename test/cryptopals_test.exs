@@ -22,14 +22,14 @@ defmodule CryptopalsTest do
 
   test ".single_byte_decrypt" do
     hex = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
-    {key, decoded} = Cryptopals.single_byte_decrypt(hex, 16)
+    {<<key::8>>, decoded} = Cryptopals.single_byte_decrypt(hex, 16)
     assert 0 <= key && key < 256
     assert decoded == "Cooking MC's like a pound of bacon"
   end
 
   test ".single_byte_decrypt on multiple" do
-    {key, decoded} =
-      File.stream!("input-1-4.txt")
+    {<<key::8>>, decoded} =
+      File.stream!(Path.join("inputs", "1-4.txt"))
       |> Enum.map(&String.trim/1)
       |> Enum.map(&Cryptopals.single_byte_decrypt(&1, 16))
       |> Enum.max_by(fn {_key, string} -> CharacterFrequency.text_score(string) end)
